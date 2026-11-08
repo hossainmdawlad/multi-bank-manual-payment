@@ -11,7 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 WooCommerce gateway that allows customers to choose from multiple bank accounts and upload a payment receipt (screenshot/image) during checkout for manual verification.
 
 == Description ==
-This plugin adds a secure **Multiple Bank Payment** option to your WooCommerce store. Customers can choose their preferred bank from a list of configured bank accounts, view the full account details (number, holder name, branch, routing, SWIFT code, address), and **upload a screenshot or photo of their bank payment receipt** directly on the checkout page. The uploaded image is securely stored and displayed in the order details for easy manual verification by the store admin.
+
+This plugin adds a secure **Multi Bank Manual Payment** option to your WooCommerce store. Customers can choose their preferred bank from a list of configured bank accounts, view the full account details (number, holder name, branch, routing, SWIFT code, address), and **upload a screenshot or photo of their bank payment receipt** directly on the checkout page. The uploaded image is securely stored and displayed in the order details for easy manual verification by the store admin.
 
 **Perfect for businesses that receive payments through multiple bank accounts.**
 
@@ -31,14 +32,14 @@ This plugin adds a secure **Multiple Bank Payment** option to your WooCommerce s
 1. Upload the `multi-bank-manual-payment` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Go to **WooCommerce → Settings → Payments**.
-4. Find **"Multiple Bank Payment Method"** and click **Manage**.
+4. Find **"Multi Bank Manual Payment"** and click **Manage**.
 5. Enable the gateway, add one or more bank accounts, and save changes.
 6. Customers will now see this option at checkout, select their bank, and upload their payment proof.
 
 == Frequently Asked Questions ==
 
 = How do I add multiple bank accounts? =
-Go to **WooCommerce → Settings → Payments → Multiple Bank Payment Method → Manage**. You will see a "Bank Accounts" section with an **+ Add Bank** button. Fill in the bank details for each account and click **Save changes**.
+Go to **WooCommerce → Settings → Payments → Multi Bank Manual Payment → Manage**. You will see a "Bank Accounts" section with an **+ Add Bank** button. Fill in the bank details for each account and click **Save changes**.
 
 = Can I change the order of the bank list? =
 Currently banks are shown in the order they are listed. You can remove and re-add them in your preferred order.
@@ -65,13 +66,22 @@ Yes. It works alongside PayPal, Stripe, Cash on Delivery, and other gateways.
 
 == Changelog ==
 
+|= 3.0.0 =
+* **Rename**: Plugin renamed from "Multiple Bank Payment Method" to "Multi Bank Manual Payment" for WordPress.org submission.
+* **Rename**: Gateway ID changed from `bangladeshi_bank_payment` to `multi_bank_manual_payment`.
+* **Rename**: Text domain changed from `multiple-bank-payment-method` to `multi-bank-manual-payment`.
+* **New**: SWIFT Code field added to bank accounts — display SWIFT/BIC on checkout and admin order details.
+* **New**: Bank Address field added to bank accounts — customers and admins can see the bank's address.
+* **Improved**: `get_payment_method_data()` now includes `swift_code` and `bank_address` for block-based checkout.
+* **Improved**: Auto-migration populates `swift_code` and `bank_address` as empty for legacy single-bank upgrades.
+
 |= 2.3.0 =
 * **New**: SWIFT Code field added to bank accounts — display SWIFT/BIC on checkout and admin order details.
 * **New**: Bank Address field added to bank accounts — customers and admins can see the bank's address.
 * **Improved**: `get_payment_method_data()` now includes `swift_code` and `bank_address` for block-based checkout.
 * **Improved**: Auto-migration populates `swift_code` and `bank_address` as empty for legacy single-bank upgrades.
 
-||= 2.2.0 =
+|= 2.2.0 =
 * **Refactored**: Renamed developer prefix from "RSLDV" to "ALD" throughout the plugin codebase.
 * **New**: Bank logo display — add logo URLs to bank accounts and display them on checkout.
 * **New**: Bank logo dynamically updates when customers select different banks from the dropdown.
@@ -92,53 +102,57 @@ Yes. It works alongside PayPal, Stripe, Cash on Delivery, and other gateways.
 * **Security**: Nonce verification now halts execution on failure — checkout cannot proceed without a valid nonce.
 * **Security**: Server-side MIME type and file-size validation added for payment receipt uploads — images only (JPEG/PNG), max 5 MB, enforced before `wp_handle_upload()`.
 
-= 1.1.7 =
+|= 1.1.7 =
 * Fix: Fixed the "Payment Pending" and infinite loading issues to ensure smooth order placement.
 * Fix: Removed global namespace function to comply with WordPress Naming Conventions (Non-Prefixed Function error).
 * Fix: Optimized asset enqueuing using anonymous functions for better security and compatibility.
 
-= 1.0.8 =
+|= 1.0.8 =
 * Fixed: Resolved "Security check failed" error during checkout when a user tries to create a new account while using this payment gateway.
 * Fixed: Resolved infinite loading issue on the "Order Received" page by optimizing the checkout AJAX flow and standardizing redirect logic.
 * Improved: Enhanced the Admin Order Details UI with a refined receipt verification box and a "View Full Image" button for better accessibility.
 * Compliance: Fully sanitized all $_POST and $_FILES inputs to adhere to WordPress Security Coding Standards (WPCS).
 
-= 1.0.7 =
+|= 1.0.7 =
 * Improve: Enhanced the checkout user interface with a modern, card-based layout for bank details.
 * Fixed: Resolved "Choose File" border breaking issue on mobile devices.
 * Fixed: Increased image upload size limit to 5MB to support high-quality receipts.
 * Tested: Fully compatible with the latest WordPress and WooCommerce versions.
 
-= 1.0.6 =
+|= 1.0.6 =
 * Fixed: Image upload size increased to 1MB.
 * Tested with the latest WordPress version.
 * Fixed minor bugs.
 
-= 1.0.5 =
+|= 1.0.5 =
 * Fix: Missing data.
 
-= 1.0.4 =
+|= 1.0.4 =
 * Major fix: Resolved critical conflict where inline script usage broke file upload functionality.
 * Compliance: Removed direct inline &lt;script&gt; tag to adhere to WordPress plugin submission guidelines.
 * Fix: Ensured file size validation and AJAX disable logic now function correctly using standard JS enqueuing methods.
 
-= 1.0.3 =
+|= 1.0.3 =
 * Disabled WooCommerce AJAX checkout when this gateway is selected to ensure file uploads work reliably.
 * Improved JavaScript isolation and form handling.
 
-= 1.0.2 =
+|= 1.0.2 =
 * Fixed "Please upload a payment receipt" error on checkout.
 * Added proper translators comment and PHPCS compliance.
 * Enhanced security and file validation.
 
-= 1.0.1 =
+|= 1.0.1 =
 * Minor CSS and UI improvements.
 * Better error handling for file uploads.
 
-= 1.0.0 =
+|= 1.0.0 =
 * Initial release.
 
 == Update Notice ==
+
+|= 3.0.0 =
+Major update! Plugin renamed to "Multi Bank Manual Payment" with SWIFT code and bank address fields added to all bank accounts.
+
 |= 2.2.0 =
 Major update! This version includes complete codebase refactoring with new "ALD" prefix, bank logo display support, and improved compatibility. Upgrade recommended for all users.
 
