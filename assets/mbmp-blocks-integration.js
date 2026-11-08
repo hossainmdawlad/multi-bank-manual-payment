@@ -13,7 +13,7 @@
     const { registerPaymentMethod } = wcBlocksRegistry;
 
     // Get payment method settings from localized data
-    const settings = window.wc.wcSettings.getSetting( 'bangladeshi_bank_payment_data' );
+    const settings = window.wc.wcSettings.getSetting( 'multi_bank_manual_payment_data' );
 
     if ( ! settings ) {
         return;
@@ -184,7 +184,7 @@
 
     // Register the payment method with WooCommerce Blocks
     registerPaymentMethod( {
-        name: 'bangladeshi_bank_payment',
+        name: 'multi_bank_manual_payment',
         label: wp.element.createElement( Label ),
         content: wp.element.createElement( Content ),
         edit: wp.element.createElement( Edit ),

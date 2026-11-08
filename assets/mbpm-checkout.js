@@ -4,13 +4,13 @@
     /* -----------------------------------------------------------
      *  Localised labels (PHP-in-JS — WordPress checkout pattern)
      * -----------------------------------------------------------*/
-    <?php $lbl_account  = esc_js( _x( "Account Number", "checkout label", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_holder   = esc_js( _x( "Account Holder", "checkout label", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_branch   = esc_js( _x( "Branch Name",    "checkout label", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_routing  = esc_js( _x( "Routing Number", "checkout label", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_select   = esc_js( __( "Select a Bank Account", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_hint     = esc_js( __( "Please select a bank from the dropdown above to see its payment details.", "multiple-bank-payment-method" ) ); ?>
-    <?php $lbl_nodetails= esc_js( __( "No details available for this bank.", "multiple-bank-payment-method" ) ); ?>
+    <?php $lbl_account  = esc_js( _x( "Account Number", "checkout label", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_holder   = esc_js( _x( "Account Holder", "checkout label", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_branch   = esc_js( _x( "Branch Name",    "checkout label", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_routing  = esc_js( _x( "Routing Number", "checkout label", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_select   = esc_js( __( "Select a Bank Account", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_hint     = esc_js( __( "Please select a bank from the dropdown above to see its payment details.", "multi-bank-manual-payment" ) ); ?>
+    <?php $lbl_nodetails= esc_js( __( "No details available for this bank.", "multi-bank-manual-payment" ) ); ?>
 
     /* -----------------------------------------------------------
      *  Render bank card from the selected <option>'s data-* attrs
@@ -91,7 +91,7 @@
     /* -----------------------------------------------------------
      *  Place-order: validate that receipt was uploaded
      * -----------------------------------------------------------*/
-    var uploadMsg = "<?php echo esc_js( __( "Please upload your payment receipt screenshot.", "multiple-bank-payment-method" ) ); ?>";
+    var uploadMsg = "<?php echo esc_js( __( "Please upload your payment receipt screenshot.", "multi-bank-manual-payment" ) ); ?>";
     $(document).on('click', '#place_order', function(e) {
         var selected = $('input[name="payment_method"]:checked').val();
 

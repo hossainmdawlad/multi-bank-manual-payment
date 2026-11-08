@@ -1,15 +1,15 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
+class MBMP_WC_Gateway_Multi_Bank_Manual_Payment extends WC_Payment_Gateway {
 
     public $default_title;
 
     public function __construct() {
-        $this->id                 = 'bangladeshi_bank_payment';
+        $this->id                 = 'multi_bank_manual_payment';
         $this->icon               = '';
         $this->has_fields         = true;
-        $this->method_title       = __( 'Bangladeshi Bank Payment Method', 'multiple-bank-payment-method' );
+        $this->method_title       = __( 'Multi Bank Manual Payment', 'multi-bank-manual-payment' );
 
         $this->init_form_fields();
         $this->init_settings();
@@ -65,12 +65,12 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
             return;
         }
 
-        $old_account_name   = get_option( 'woocommerce_bangladeshi_bank_payment_account_name' );
-        $old_account_number = get_option( 'woocommerce_bangladeshi_bank_payment_account_number' );
-        $old_account_holder = get_option( 'woocommerce_bangladeshi_bank_payment_account_holder' );
-        $old_branch_name    = get_option( 'woocommerce_bangladeshi_bank_payment_branch_name' );
-        $old_routing_number = get_option( 'woocommerce_bangladeshi_bank_payment_routing_number' );
-        $old_bank_logo_url  = get_option( 'woocommerce_bangladeshi_bank_payment_bank_logo_url' );
+        $old_account_name   = get_option( 'woocommerce_multi_bank_manual_payment_account_name' );
+        $old_account_number = get_option( 'woocommerce_multi_bank_manual_payment_account_number' );
+        $old_account_holder = get_option( 'woocommerce_multi_bank_manual_payment_account_holder' );
+        $old_branch_name    = get_option( 'woocommerce_multi_bank_manual_payment_branch_name' );
+        $old_routing_number = get_option( 'woocommerce_multi_bank_manual_payment_routing_number' );
+        $old_bank_logo_url  = get_option( 'woocommerce_multi_bank_manual_payment_bank_logo_url' );
 
         if ( ! $old_account_name && ! $old_account_number ) {
             return;
@@ -87,12 +87,12 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
             'bank_logo_url'  => $old_bank_logo_url  ?: '',
         );
 
-        $settings = get_option( 'woocommerce_bangladeshi_bank_payment_settings', array() );
+        $settings = get_option( 'woocommerce_multi_bank_manual_payment_settings', array() );
         $settings['bank_accounts'] = array( $single_bank );
-        update_option( 'woocommerce_bangladeshi_bank_payment_settings', $settings );
+        update_option( 'woocommerce_multi_bank_manual_payment_settings', $settings );
 
         foreach ( array( 'account_name', 'account_number', 'account_holder', 'branch_name', 'routing_number', 'swift_code', 'bank_address', 'bank_logo_url' ) as $key ) {
-            delete_option( 'woocommerce_bangladeshi_bank_payment_' . $key );
+            delete_option( 'woocommerce_multi_bank_manual_payment_' . $key );
         }
     }
 
@@ -106,7 +106,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
     public function process_admin_options() {
         parent::process_admin_options();
 
-        $settings_key = 'woocommerce_bangladeshi_bank_payment_settings';
+        $settings_key = 'woocommerce_multi_bank_manual_payment_settings';
         $settings = get_option( $settings_key, array() );
         $posted_data = isset( $_POST[ $settings_key ] ) ? $_POST[ $settings_key ] : array();
         
@@ -136,20 +136,20 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
     public function init_form_fields() {
         $this->form_fields = array(
             'enabled' => array(
-                'title'   => __( 'Enable/Disable', 'multiple-bank-payment-method' ),
+                'title'   => __( 'Enable/Disable', 'multi-bank-manual-payment' ),
                 'type'    => 'checkbox',
-                'label'   => __( 'Enable', 'multiple-bank-payment-method' ),
+                'label'   => __( 'Enable', 'multi-bank-manual-payment' ),
                 'default' => 'yes',
             ),
             'title'   => array(
-                'title'   => __( 'Gateway Title', 'multiple-bank-payment-method' ),
+                'title'   => __( 'Gateway Title', 'multi-bank-manual-payment' ),
                 'type'    => 'text',
-                'default' => __( 'Bangladeshi Bank Payment', 'multiple-bank-payment-method' ),
+                'default' => __( 'Multi Bank Manual Payment', 'multi-bank-manual-payment' ),
             ),
             'bank_accounts' => array(
-                'title'             => __( 'Bank Accounts', 'multiple-bank-payment-method' ),
+                'title'             => __( 'Bank Accounts', 'multi-bank-manual-payment' ),
                 'type'              => 'multi_bank',
-                'description'       => __( 'Add one or more bank accounts.', 'multiple-bank-payment-method' ),
+                'description'       => __( 'Add one or more bank accounts.', 'multi-bank-manual-payment' ),
                 'default'           => array(),
                 'placeholder'       => array(),
             ),
@@ -160,7 +160,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
      * Render the multi-bank repeater field in admin.
      */
     public function generate_multi_bank_html( $key, $data ) {
-        $field_key   = 'woocommerce_bangladeshi_bank_payment_settings[' . $key . ']';
+        $field_key   = 'woocommerce_multi_bank_manual_payment_settings[' . $key . ']';
         $field_value = $this->get_option( $key, isset( $data['default'] ) ? $data['default'] : array() );
         if ( ! is_array( $field_value ) ) {
             $field_value = array();
@@ -186,47 +186,47 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                 <?php foreach ( $field_value as $index => $bank ) : ?>
                     <div class="mbpm-bank-item" data-index="<?php echo esc_attr( $index ); ?>">
                         <div class="mbpm-bank-item-header">
-                            <span class="mbpm-bank-item-title"><?php echo esc_html( isset( $bank['account_name'] ) && $bank['account_name'] ? $bank['account_name'] : __( '(New Bank)', 'multiple-bank-payment-method' ) ); ?></span>
-                            <button type="button" class="mbpm-remove-bank" data-index="<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'Remove', 'multiple-bank-payment-method' ); ?></button>
+                            <span class="mbpm-bank-item-title"><?php echo esc_html( isset( $bank['account_name'] ) && $bank['account_name'] ? $bank['account_name'] : __( '(New Bank)', 'multi-bank-manual-payment' ) ); ?></span>
+                            <button type="button" class="mbpm-remove-bank" data-index="<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'Remove', 'multi-bank-manual-payment' ); ?></button>
                         </div>
                         <div class="mbpm-bank-grid">
                             <div class="forminp">
-                                <label><?php esc_html_e( 'Bank Name *', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'Bank Name *', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][account_name]" value="<?php echo esc_attr( $bank['account_name'] ?? '' ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'A/C Number *', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'A/C Number *', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][account_number]" value="<?php echo esc_attr( $bank['account_number'] ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'A/C Holder Name *', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'A/C Holder Name *', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][account_holder]" value="<?php echo esc_attr( $bank['account_holder'] ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'Branch Name', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'Branch Name', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][branch_name]" value="<?php echo esc_attr( $bank['branch_name'] ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'Routing Number', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'Routing Number', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][routing_number]" value="<?php echo esc_attr( $bank['routing_number'] ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'SWIFT Code', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'SWIFT Code', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][swift_code]" value="<?php echo esc_attr( $bank['swift_code'] ?? '' ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'Bank Address', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'Bank Address', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][bank_address]" value="<?php echo esc_attr( $bank['bank_address'] ?? '' ); ?>" />
                             </div>
                             <div class="forminp">
-                                <label><?php esc_html_e( 'Bank Logo URL', 'multiple-bank-payment-method' ); ?></label>
+                                <label><?php esc_html_e( 'Bank Logo URL', 'multi-bank-manual-payment' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][bank_logo_url]" value="<?php echo esc_attr( $bank['bank_logo_url'] ); ?>" />
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <button type="button" class="button mbpm-add-bank-btn" id="mbpm-add-bank">+ <?php esc_html_e( 'Add Bank', 'multiple-bank-payment-method' ); ?></button>
+            <button type="button" class="button mbpm-add-bank-btn" id="mbpm-add-bank">+ <?php esc_html_e( 'Add Bank', 'multi-bank-manual-payment' ); ?></button>
         </div>
 
         <script type="text/javascript">
@@ -235,18 +235,18 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
             var bankTemplate = 
                 '<div class="mbpm-bank-item" data-index="{{INDEX}}">' +
                 '<div class="mbpm-bank-item-header">' +
-                '<span class="mbpm-bank-item-title"><?php echo esc_js( __( '(New Bank)', 'multiple-bank-payment-method' ) ); ?></span>' +
-                '<button type="button" class="mbpm-remove-bank" data-index="{{INDEX}}"><?php echo esc_js( __( 'Remove', 'multiple-bank-payment-method' ) ); ?></button>' +
+                '<span class="mbpm-bank-item-title"><?php echo esc_js( __( '(New Bank)', 'multi-bank-manual-payment' ) ); ?></span>' +
+                '<button type="button" class="mbpm-remove-bank" data-index="{{INDEX}}"><?php echo esc_js( __( 'Remove', 'multi-bank-manual-payment' ) ); ?></button>' +
                 '</div>' +
                 '<div class="mbpm-bank-grid">' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Name *', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_name]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'A/C Number *', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_number]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'A/C Holder Name *', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_holder]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'Branch Name', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][branch_name]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'Routing Number', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][routing_number]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'SWIFT Code', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][swift_code]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Address', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_address]" value="" /></div>' +
-                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Logo URL', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_logo_url]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Name *', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_name]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'A/C Number *', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_number]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'A/C Holder Name *', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_holder]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Branch Name', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][branch_name]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Routing Number', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][routing_number]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'SWIFT Code', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][swift_code]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Address', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_address]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Logo URL', 'multi-bank-manual-payment' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_logo_url]" value="" /></div>' +
                 '</div>' +
                 '</div>';
             
@@ -297,10 +297,10 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
             <?php if ( count( $banks ) > 1 ) : ?>
                 <div class="ald-bank-selector" style="margin-bottom:18px;">
                     <label class="ald-select-label" for="mbpm_selected_bank">
-                        <?php esc_html_e( 'Select your bank:', 'multiple-bank-payment-method' ); ?>
+                        <?php esc_html_e( 'Select your bank:', 'multi-bank-manual-payment' ); ?>
                     </label>
                     <select id="mbpm_selected_bank" name="mbpm_selected_bank" class="woocommerce-select ald-bank-select" style="width:100%;padding:10px 14px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px;">
-                        <option value=""><?php esc_html_e( '— Choose a bank —', 'multiple-bank-payment-method' ); ?></option>
+                        <option value=""><?php esc_html_e( '— Choose a bank —', 'multi-bank-manual-payment' ); ?></option>
                         <?php foreach ( $banks as $i => $bank ) : ?>
                             <option value="<?php echo esc_attr( $i ); ?>"
                                 data-name="<?php echo esc_attr( $bank['account_name'] ); ?>"
@@ -329,30 +329,30 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                     echo '<span class="ald-bank-header" id="mbpm-bank-header">' . esc_html( $bank['account_name'] ) . '</span>';
                     echo '<span id="mbpm-bank-details">';
                     if ( ! empty( $bank['account_number'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Account Number:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['account_number'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Account Number:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['account_number'] ) . '</span></div>';
                     }
                     if ( ! empty( $bank['account_holder'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Account Holder:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['account_holder'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Account Holder:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['account_holder'] ) . '</span></div>';
                     }
                     if ( ! empty( $bank['branch_name'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Branch:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['branch_name'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Branch:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['branch_name'] ) . '</span></div>';
                     }
                     if ( ! empty( $bank['routing_number'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Routing:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['routing_number'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Routing:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['routing_number'] ) . '</span></div>';
                     }
                     if ( ! empty( $bank['swift_code'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'SWIFT Code:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['swift_code'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'SWIFT Code:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['swift_code'] ) . '</span></div>';
                     }
                     if ( ! empty( $bank['bank_address'] ) ) {
-                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Address:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['bank_address'] ) . '</span></div>';
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Address:', 'multi-bank-manual-payment' ) . '</span><span class="ald-value">' . esc_html( $bank['bank_address'] ) . '</span></div>';
                     }
                     echo '</span>';
                 } elseif ( count( $banks ) > 1 ) {
                     echo '<span class="ald-bank-header" id="mbpm-bank-header">—</span>';
-                    echo '<span id="mbpm-bank-details"><p style="color:#64748b;">' . esc_html__( 'Please select a bank from the dropdown to see its details.', 'multiple-bank-payment-method' ) . '</p></span>';
+                    echo '<span id="mbpm-bank-details"><p style="color:#64748b;">' . esc_html__( 'Please select a bank from the dropdown to see its details.', 'multi-bank-manual-payment' ) . '</p></span>';
                 } else {
                     echo '<span class="ald-bank-header" id="mbpm-bank-header"></span>';
-                    echo '<span id="mbpm-bank-details"><p style="color:#64748b;">' . esc_html__( 'No bank accounts configured.', 'multiple-bank-payment-method' ) . '</p></span>';
+                    echo '<span id="mbpm-bank-details"><p style="color:#64748b;">' . esc_html__( 'No bank accounts configured.', 'multi-bank-manual-payment' ) . '</p></span>';
                 }
                 ?>
             </div>
@@ -371,7 +371,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                         
                         if (idx === '' || !selectedOption) {
                             bankHeader.textContent = '—';
-                            bankDetails.innerHTML = '<p style="color:#64748b;"><?php echo esc_js( __( 'Please select a bank from the dropdown to see its details.', 'multiple-bank-payment-method' ) ); ?></p>';
+                            bankDetails.innerHTML = '<p style="color:#64748b;"><?php echo esc_js( __( 'Please select a bank from the dropdown to see its details.', 'multi-bank-manual-payment' ) ); ?></p>';
                             return;
                         }
                         
@@ -393,12 +393,12 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                         var bankSwift = selectedOption.getAttribute('data-swift') || '';
                         var bankAddress = selectedOption.getAttribute('data-address') || '';
 
-                        if (bankAcc) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Number:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankAcc + '</span></div>';
-                        if (bankHolder) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Holder:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankHolder + '</span></div>';
-                        if (bankBranch) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Branch:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankBranch + '</span></div>';
-                        if (bankRouting) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Routing:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankRouting + '</span></div>';
-                        if (bankSwift) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'SWIFT Code:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankSwift + '</span></div>';
-                        if (bankAddress) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Address:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankAddress + '</span></div>';
+                        if (bankAcc) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Number:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankAcc + '</span></div>';
+                        if (bankHolder) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Holder:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankHolder + '</span></div>';
+                        if (bankBranch) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Branch:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankBranch + '</span></div>';
+                        if (bankRouting) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Routing:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankRouting + '</span></div>';
+                        if (bankSwift) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'SWIFT Code:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankSwift + '</span></div>';
+                        if (bankAddress) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Address:', 'multi-bank-manual-payment' ) ); ?></span><span class="ald-value">' + bankAddress + '</span></div>';
                         
                         bankDetails.innerHTML = html;
                     });
@@ -417,7 +417,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                     // Listen for payment method changes
                     document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
                         radio.addEventListener('change', function() {
-                            if (this.value === 'bangladeshi_bank_payment') {
+                            if (this.value === 'multi_bank_manual_payment') {
                                 // Switch to standard form submission for file uploads
                                 form.setAttribute('action', form.getAttribute('action') || window.location.href);
                                 form.removeAttribute('data-checkout-url');
@@ -429,19 +429,19 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                     // Intercept form submission for our gateway
                     form.addEventListener('submit', function(e) {
                         var paymentInput = document.querySelector('input[name="payment_method"]:checked');
-                        if (!paymentInput || paymentInput.value !== 'bangladeshi_bank_payment') return;
+                        if (!paymentInput || paymentInput.value !== 'multi_bank_manual_payment') return;
                         
                         var fileInput = document.getElementById('mbpm-payment-receipt');
                         if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
                             e.preventDefault();
-                            alert('<?php echo esc_js( __( 'Please upload your payment receipt.', 'multiple-bank-payment-method' ) ); ?>');
+                            alert('<?php echo esc_js( __( 'Please upload your payment receipt.', 'multi-bank-manual-payment' ) ); ?>');
                             return;
                         }
                         
                         // Validate file size
                         if (fileInput.files[0].size > 5242880) {
                             e.preventDefault();
-                            alert('<?php echo esc_js( __( 'File size exceeds 5MB limit.', 'multiple-bank-payment-method' ) ); ?>');
+                            alert('<?php echo esc_js( __( 'File size exceeds 5MB limit.', 'multi-bank-manual-payment' ) ); ?>');
                             return;
                         }
                         
@@ -454,7 +454,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                     
                     // Check initial state
                     var checked = document.querySelector('input[name="payment_method"]:checked');
-                    if (checked && checked.value === 'bangladeshi_bank_payment') {
+                    if (checked && checked.value === 'multi_bank_manual_payment') {
                         form.removeAttribute('data-checkout-url');
                         form.classList.remove('checkout');
                     }
@@ -464,18 +464,18 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
 
             <div class="ald-upload-section" style="margin-top:20px;">
                 <label class="ald-upload-label" for="mbpm-payment-receipt">
-                    <?php esc_html_e( 'Upload Payment Receipt (Required)', 'multiple-bank-payment-method' ); ?> <span style="color:red;">*</span>
+                    <?php esc_html_e( 'Upload Payment Receipt (Required)', 'multi-bank-manual-payment' ); ?> <span style="color:red;">*</span>
                 </label>
                 <input id="mbpm-payment-receipt" class="ald-file-input" type="file" name="mbpm_payment_receipt" accept="image/png,image/jpeg,image/jpg" required />
                 <?php wp_nonce_field( 'mbpm_payment_upload', 'mbpm_payment_nonce' ); ?>
                 <p style="font-size:12px; color:#64748b; margin-top:5px;">
-                    <?php esc_html_e( 'Max: 5MB. Formats: PNG, JPG, JPEG.', 'multiple-bank-payment-method' ); ?>
+                    <?php esc_html_e( 'Max: 5MB. Formats: PNG, JPG, JPEG.', 'multi-bank-manual-payment' ); ?>
                 </p>
             </div>
 
             <div class="ald-alert-box" style="margin-top:20px;">
                 <p class="ald-alert-text">
-                    <?php esc_html_e( 'Please pay the total amount and upload your payment receipt to confirm your order.', 'multiple-bank-payment-method' ); ?>
+                    <?php esc_html_e( 'Please pay the total amount and upload your payment receipt to confirm your order.', 'multi-bank-manual-payment' ); ?>
                 </p>
             </div>
         </div>
@@ -487,12 +487,12 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
      * -----------------------------------------------------------*/
     public function process_payment( $order_id ) {
         if ( ! isset( $_POST['mbpm_payment_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['mbpm_payment_nonce'] ), 'mbpm_payment_upload' ) ) {
-            wc_add_notice( __( 'Security check failed.', 'multiple-bank-payment-method' ), 'error' );
+            wc_add_notice( __( 'Security check failed.', 'multi-bank-manual-payment' ), 'error' );
             return;
         }
 
         if ( ! isset( $_FILES['mbpm_payment_receipt'] ) || empty( $_FILES['mbpm_payment_receipt']['name'] ) ) {
-            wc_add_notice( __( 'Please upload a payment receipt.', 'multiple-bank-payment-method' ), 'error' );
+            wc_add_notice( __( 'Please upload a payment receipt.', 'multi-bank-manual-payment' ), 'error' );
             return;
         }
 
@@ -501,25 +501,25 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
 
         if ( count( $banks ) > 1 ) {
             if ( $selected_bank_index === '' || $selected_bank_index < 0 || ! isset( $banks[ $selected_bank_index ] ) ) {
-                wc_add_notice( __( 'Please select a bank account.', 'multiple-bank-payment-method' ), 'error' );
+                wc_add_notice( __( 'Please select a bank account.', 'multi-bank-manual-payment' ), 'error' );
                 return;
             }
         }
 
         if ( empty( $banks ) ) {
-            wc_add_notice( __( 'No bank accounts are configured.', 'multiple-bank-payment-method' ), 'error' );
+            wc_add_notice( __( 'No bank accounts are configured.', 'multi-bank-manual-payment' ), 'error' );
             return;
         }
 
         $allowed_mime_types = array( 'image/jpeg', 'image/png', 'image/jpg' );
         $file_info = wp_check_filetype( basename( $_FILES['mbpm_payment_receipt']['name'] ), null );
         if ( ! in_array( $file_info['type'], $allowed_mime_types ) ) {
-            wc_add_notice( __( 'Invalid file type.', 'multiple-bank-payment-method' ), 'error' );
+            wc_add_notice( __( 'Invalid file type.', 'multi-bank-manual-payment' ), 'error' );
             return;
         }
 
         if ( $_FILES['mbpm_payment_receipt']['size'] > 5242880 ) {
-            wc_add_notice( __( 'File size exceeds 5MB limit.', 'multiple-bank-payment-method' ), 'error' );
+            wc_add_notice( __( 'File size exceeds 5MB limit.', 'multi-bank-manual-payment' ), 'error' );
             return;
         }
 
@@ -557,7 +557,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
         update_post_meta( $order_id, '_mbpm_selected_bank_address', sanitize_textarea_field( $selected_bank['bank_address'] ?? '' ) );
 
         $order = wc_get_order( $order_id );
-        $order->update_status( 'on-hold', __( 'Awaiting manual confirmation.', 'multiple-bank-payment-method' ) );
+        $order->update_status( 'on-hold', __( 'Awaiting manual confirmation.', 'multi-bank-manual-payment' ) );
         WC()->cart->empty_cart();
 
         return array( 'result' => 'success', 'redirect' => $this->get_return_url( $order ) );
@@ -581,22 +581,22 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
 
             if ( $bank_name ) {
                 echo '<div style="padding:14px; background:#f1f5f9; border-bottom:1px solid #cbd5e1; font-weight:700; color:#334155; font-size:15px;">';
-                    echo esc_html__( 'Paid via Bank', 'multiple-bank-payment-method' );
+                    echo esc_html__( 'Paid via Bank', 'multi-bank-manual-payment' );
                 echo '</div>';
                 echo '<table style="width:100%;border-collapse:collapse;padding:12px 15px;">';
-                if ( $bank_name )    echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Bank', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_name ) . '</td></tr>';
-                if ( $bank_number )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'A/C Number', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_number ) . '</td></tr>';
-                if ( $bank_holder )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'A/C Holder', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_holder ) . '</td></tr>';
-                if ( $bank_branch )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Branch', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_branch ) . '</td></tr>';
-                if ( $bank_routing ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Routing', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_routing ) . '</td></tr>';
-                if ( $bank_swift )   echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'SWIFT Code', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_swift ) . '</td></tr>';
-                if ( $bank_address ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Address', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_address ) . '</td></tr>';
+                if ( $bank_name )    echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Bank', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_name ) . '</td></tr>';
+                if ( $bank_number )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'A/C Number', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_number ) . '</td></tr>';
+                if ( $bank_holder )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'A/C Holder', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_holder ) . '</td></tr>';
+                if ( $bank_branch )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Branch', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_branch ) . '</td></tr>';
+                if ( $bank_routing ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Routing', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_routing ) . '</td></tr>';
+                if ( $bank_swift )   echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'SWIFT Code', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_swift ) . '</td></tr>';
+                if ( $bank_address ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Address', 'multi-bank-manual-payment' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_address ) . '</td></tr>';
                 echo '</table>';
             }
 
             if ( $receipt_url ) {
                 echo '<div style="padding:14px; background:#f1f5f9; border-top:1px solid #cbd5e1; font-weight:700; color:#334155; font-size:15px;">';
-                    echo esc_html__( 'Payment Receipt Verification', 'multiple-bank-payment-method' );
+                    echo esc_html__( 'Payment Receipt Verification', 'multi-bank-manual-payment' );
                 echo '</div>';
                 echo '<div style="padding:15px; text-align:center; background:#fff;">';
                     echo '<div style="width:100%; height:200px; overflow:hidden; border-radius:4px; border:1px solid #e2e8f0; margin-bottom:15px; display:flex; align-items:center; justify-content:center; background:#f8fafc;">';
@@ -606,7 +606,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                             echo '<img src="' . esc_url( $receipt_url ) . '" style="max-width:100%; height:auto;" alt="Payment Receipt" />';
                         }
                     echo '</div>';
-                    echo '<a href="' . esc_url( $receipt_url ) . '" target="_blank" class="button button-primary">' . esc_html__( 'View Full Image', 'multiple-bank-payment-method' ) . '</a>';
+                    echo '<a href="' . esc_url( $receipt_url ) . '" target="_blank" class="button button-primary">' . esc_html__( 'View Full Image', 'multi-bank-manual-payment' ) . '</a>';
                 echo '</div>';
             }
         echo '</div>';

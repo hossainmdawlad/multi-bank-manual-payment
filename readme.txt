@@ -1,9 +1,9 @@
-=== Multiple Bank Payment Method ===
+=== Multi Bank Manual Payment ===
 Contributors: hossainawlad
 Tags: woocommerce, payment gateway, multiple bank transfer, manual payment, bank payment gateway
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 2.2.0
+Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -28,7 +28,7 @@ This plugin adds a secure **Multiple Bank Payment** option to your WooCommerce s
 * No sensitive API keys needed — secure and lightweight.
 
 == Installation ==
-1. Upload the `multiple-bank-payment-method` folder to the `/wp-content/plugins/` directory.
+1. Upload the `multi-bank-manual-payment` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Go to **WooCommerce → Settings → Payments**.
 4. Find **"Multiple Bank Payment Method"** and click **Manage**.
