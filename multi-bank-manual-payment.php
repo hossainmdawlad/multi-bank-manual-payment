@@ -7,7 +7,6 @@ Version:     3.0.0
 Author:      Hossain Md. Awlad
 Author URI:  https://www.technoviable.com
 Requires at least: 6.0
-Tested up to: 6.9
 Requires PHP: 7.4
 Requires Plugins: woocommerce
 License: GPLv3 or later

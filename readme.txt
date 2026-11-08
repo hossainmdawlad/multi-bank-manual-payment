@@ -2,7 +2,7 @@
 Contributors: hossainawlad
 Tags: woocommerce, payment gateway, multiple bank transfer, manual payment, bank payment gateway
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.1
 Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv3 or later
