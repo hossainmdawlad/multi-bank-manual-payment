@@ -1,5 +1,5 @@
 === Multiple Bank Payment Method ===
-Contributors: shagor447
+Contributors: hossainawlad
 Tags: woocommerce, payment gateway, multiple bank transfer, manual payment, bank payment gateway
 Requires at least: 6.0
 Tested up to: 6.9
@@ -11,12 +11,13 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 WooCommerce gateway that allows customers to choose from multiple bank accounts and upload a payment receipt (screenshot/image) during checkout for manual verification.
 
 == Description ==
-This plugin adds a secure **Multiple Bank Payment** option to your WooCommerce store. Customers can choose their preferred bank from a list of configured bank accounts, view the full account details (number, holder name, branch, routing), and **upload a screenshot or photo of their bank payment receipt** directly on the checkout page. The uploaded image is securely stored and displayed in the order details for easy manual verification by the store admin.
+This plugin adds a secure **Multiple Bank Payment** option to your WooCommerce store. Customers can choose their preferred bank from a list of configured bank accounts, view the full account details (number, holder name, branch, routing, SWIFT code, address), and **upload a screenshot or photo of their bank payment receipt** directly on the checkout page. The uploaded image is securely stored and displayed in the order details for easy manual verification by the store admin.
 
 **Perfect for businesses that receive payments through multiple bank accounts.**
 
 **Features:**
 * Configure **unlimited bank accounts** — add or remove banks from the settings page at any time.
+* Each bank account supports **Account Name, Number, Holder, Branch, Routing, SWIFT Code, and Address**.
 * Customers select their bank from a clean dropdown and see the correct account details instantly.
 * Customers upload a **payment receipt image** (PNG/JPG) during checkout.
 * Automatic file validation (max 5MB, only images allowed).
@@ -64,7 +65,13 @@ Yes. It works alongside PayPal, Stripe, Cash on Delivery, and other gateways.
 
 == Changelog ==
 
-|= 2.2.0 =
+|= 2.3.0 =
+* **New**: SWIFT Code field added to bank accounts — display SWIFT/BIC on checkout and admin order details.
+* **New**: Bank Address field added to bank accounts — customers and admins can see the bank's address.
+* **Improved**: `get_payment_method_data()` now includes `swift_code` and `bank_address` for block-based checkout.
+* **Improved**: Auto-migration populates `swift_code` and `bank_address` as empty for legacy single-bank upgrades.
+
+||= 2.2.0 =
 * **Refactored**: Renamed developer prefix from "RSLDV" to "ALD" throughout the plugin codebase.
 * **New**: Bank logo display — add logo URLs to bank accounts and display them on checkout.
 * **New**: Bank logo dynamically updates when customers select different banks from the dropdown.

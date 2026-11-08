@@ -73,6 +73,12 @@
                         null,
                     bank.branch_name ?
                         wp.element.createElement( 'div', { className: 'branch_name' }, bank.branch_name ) :
+                        null,
+                    bank.swift_code ?
+                        wp.element.createElement( 'div', { className: 'swift_code' }, 'SWIFT Code: ' + bank.swift_code ) :
+                        null,
+                    bank.bank_address ?
+                        wp.element.createElement( 'div', { className: 'bank_address' }, 'Address: ' + bank.bank_address ) :
                         null
                 ),
                 wp.element.createElement(

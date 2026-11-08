@@ -39,6 +39,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                 'account_holder'=> $bank['account_holder'],
                 'branch_name'   => $bank['branch_name'],
                 'routing_number'=> $bank['routing_number'],
+                'swift_code'    => $bank['swift_code'] ?? '',
+                'bank_address'  => $bank['bank_address'] ?? '',
                 'bank_logo_url' => $bank['bank_logo_url'] ?? '',
             );
         }
@@ -80,6 +82,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
             'account_holder' => $old_account_holder ?: '',
             'branch_name'    => $old_branch_name    ?: '',
             'routing_number' => $old_routing_number ?: '',
+            'swift_code'     => '',
+            'bank_address'   => '',
             'bank_logo_url'  => $old_bank_logo_url  ?: '',
         );
 
@@ -87,7 +91,7 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
         $settings['bank_accounts'] = array( $single_bank );
         update_option( 'woocommerce_bangladeshi_bank_payment_settings', $settings );
 
-        foreach ( array( 'account_name', 'account_number', 'account_holder', 'branch_name', 'routing_number', 'bank_logo_url' ) as $key ) {
+        foreach ( array( 'account_name', 'account_number', 'account_holder', 'branch_name', 'routing_number', 'swift_code', 'bank_address', 'bank_logo_url' ) as $key ) {
             delete_option( 'woocommerce_bangladeshi_bank_payment_' . $key );
         }
     }
@@ -117,6 +121,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                         'account_holder' => sanitize_text_field( wp_unslash( $bank['account_holder'] ?? '' ) ),
                         'branch_name'    => sanitize_text_field( wp_unslash( $bank['branch_name'] ?? '' ) ),
                         'routing_number' => sanitize_text_field( wp_unslash( $bank['routing_number'] ?? '' ) ),
+                        'swift_code'     => sanitize_text_field( wp_unslash( $bank['swift_code'] ?? '' ) ),
+                        'bank_address'   => sanitize_textarea_field( wp_unslash( $bank['bank_address'] ?? '' ) ),
                         'bank_logo_url'  => esc_url_raw( $bank['bank_logo_url'] ?? '' ),
                     );
                 }
@@ -205,6 +211,14 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][routing_number]" value="<?php echo esc_attr( $bank['routing_number'] ); ?>" />
                             </div>
                             <div class="forminp">
+                                <label><?php esc_html_e( 'SWIFT Code', 'multiple-bank-payment-method' ); ?></label>
+                                <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][swift_code]" value="<?php echo esc_attr( $bank['swift_code'] ?? '' ); ?>" />
+                            </div>
+                            <div class="forminp">
+                                <label><?php esc_html_e( 'Bank Address', 'multiple-bank-payment-method' ); ?></label>
+                                <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][bank_address]" value="<?php echo esc_attr( $bank['bank_address'] ?? '' ); ?>" />
+                            </div>
+                            <div class="forminp">
                                 <label><?php esc_html_e( 'Bank Logo URL', 'multiple-bank-payment-method' ); ?></label>
                                 <input type="text" name="<?php echo esc_attr( $field_key ); ?>[<?php echo esc_attr( $index ); ?>][bank_logo_url]" value="<?php echo esc_attr( $bank['bank_logo_url'] ); ?>" />
                             </div>
@@ -230,6 +244,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                 '<div class="forminp"><label><?php echo esc_js( __( 'A/C Holder Name *', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][account_holder]" value="" /></div>' +
                 '<div class="forminp"><label><?php echo esc_js( __( 'Branch Name', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][branch_name]" value="" /></div>' +
                 '<div class="forminp"><label><?php echo esc_js( __( 'Routing Number', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][routing_number]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'SWIFT Code', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][swift_code]" value="" /></div>' +
+                '<div class="forminp"><label><?php echo esc_js( __( 'Bank Address', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_address]" value="" /></div>' +
                 '<div class="forminp"><label><?php echo esc_js( __( 'Bank Logo URL', 'multiple-bank-payment-method' ) ); ?></label><input type="text" name="<?php echo esc_js( $field_key ); ?>[{{INDEX}}][bank_logo_url]" value="" /></div>' +
                 '</div>' +
                 '</div>';
@@ -292,6 +308,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                                 data-holder="<?php echo esc_attr( $bank['account_holder'] ); ?>"
                                 data-branch="<?php echo esc_attr( $bank['branch_name'] ); ?>"
                                 data-routing="<?php echo esc_attr( $bank['routing_number'] ); ?>"
+                                data-swift="<?php echo esc_attr( $bank['swift_code'] ?? '' ); ?>"
+                                data-address="<?php echo esc_attr( $bank['bank_address'] ?? '' ); ?>"
                                 data-logo="<?php echo esc_attr( $bank['bank_logo_url'] ?? '' ); ?>">
                                 <?php echo esc_html( $bank['account_name'] ); ?> — <?php echo esc_html( $bank['account_number'] ); ?>
                             </option>
@@ -321,6 +339,12 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                     }
                     if ( ! empty( $bank['routing_number'] ) ) {
                         echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Routing:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['routing_number'] ) . '</span></div>';
+                    }
+                    if ( ! empty( $bank['swift_code'] ) ) {
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'SWIFT Code:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['swift_code'] ) . '</span></div>';
+                    }
+                    if ( ! empty( $bank['bank_address'] ) ) {
+                        echo '<div class="ald-info-row"><span class="ald-label">' . esc_html__( 'Address:', 'multiple-bank-payment-method' ) . '</span><span class="ald-value">' . esc_html( $bank['bank_address'] ) . '</span></div>';
                     }
                     echo '</span>';
                 } elseif ( count( $banks ) > 1 ) {
@@ -366,11 +390,15 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                         var bankHolder = selectedOption.getAttribute('data-holder') || '';
                         var bankBranch = selectedOption.getAttribute('data-branch') || '';
                         var bankRouting = selectedOption.getAttribute('data-routing') || '';
-                        
+                        var bankSwift = selectedOption.getAttribute('data-swift') || '';
+                        var bankAddress = selectedOption.getAttribute('data-address') || '';
+
                         if (bankAcc) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Number:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankAcc + '</span></div>';
                         if (bankHolder) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Account Holder:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankHolder + '</span></div>';
                         if (bankBranch) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Branch:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankBranch + '</span></div>';
                         if (bankRouting) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Routing:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankRouting + '</span></div>';
+                        if (bankSwift) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'SWIFT Code:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankSwift + '</span></div>';
+                        if (bankAddress) html += '<div class="ald-info-row"><span class="ald-label"><?php echo esc_js( __( 'Address:', 'multiple-bank-payment-method' ) ); ?></span><span class="ald-value">' + bankAddress + '</span></div>';
                         
                         bankDetails.innerHTML = html;
                     });
@@ -525,6 +553,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
         update_post_meta( $order_id, '_mbpm_selected_bank_holder',  sanitize_text_field( $selected_bank['account_holder'] ?? '' ) );
         update_post_meta( $order_id, '_mbpm_selected_bank_branch',  sanitize_text_field( $selected_bank['branch_name'] ?? '' ) );
         update_post_meta( $order_id, '_mbpm_selected_bank_routing', sanitize_text_field( $selected_bank['routing_number'] ?? '' ) );
+        update_post_meta( $order_id, '_mbpm_selected_bank_swift',   sanitize_text_field( $selected_bank['swift_code'] ?? '' ) );
+        update_post_meta( $order_id, '_mbpm_selected_bank_address', sanitize_textarea_field( $selected_bank['bank_address'] ?? '' ) );
 
         $order = wc_get_order( $order_id );
         $order->update_status( 'on-hold', __( 'Awaiting manual confirmation.', 'multiple-bank-payment-method' ) );
@@ -544,6 +574,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
         $bank_holder  = get_post_meta( $order->get_id(), '_mbpm_selected_bank_holder',  true );
         $bank_branch  = get_post_meta( $order->get_id(), '_mbpm_selected_bank_branch',  true );
         $bank_routing = get_post_meta( $order->get_id(), '_mbpm_selected_bank_routing', true );
+        $bank_swift   = get_post_meta( $order->get_id(), '_mbpm_selected_bank_swift',   true );
+        $bank_address = get_post_meta( $order->get_id(), '_mbpm_selected_bank_address', true );
 
         echo '<div class="ald-admin-receipt-box" style="margin-top:20px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; overflow:hidden; max-width:380px;">';
 
@@ -557,6 +589,8 @@ class ALDmbpm_WC_Gateway_Bangladeshi_Bank_Payment extends WC_Payment_Gateway {
                 if ( $bank_holder )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'A/C Holder', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_holder ) . '</td></tr>';
                 if ( $bank_branch )  echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Branch', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_branch ) . '</td></tr>';
                 if ( $bank_routing ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Routing', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_routing ) . '</td></tr>';
+                if ( $bank_swift )   echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'SWIFT Code', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_swift ) . '</td></tr>';
+                if ( $bank_address ) echo '<tr><td style="padding:6px 8px;font-weight:600;color:#64748b;font-size:13px;">' . esc_html__( 'Address', 'multiple-bank-payment-method' ) . '</td><td style="padding:6px 8px;font-weight:600;color:#1e293b;font-size:14px;">' . esc_html( $bank_address ) . '</td></tr>';
                 echo '</table>';
             }
 

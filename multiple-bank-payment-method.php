@@ -2,8 +2,8 @@
 /*
 Plugin Name: Multiple Bank Payment Method
 Plugin URI:  https://www.technoviable.com
-Description: WooCommerce payment gateway allowing customers to choose from multiple bank accounts (Bangladeshi or any) and upload a payment receipt (screenshot/image) during checkout for manual verification.
-Version:     2.2.0
+Description: WooCommerce payment gateway allowing customers to choose from multiple bank accounts (Bangladeshi or any), view full account details including SWIFT code and bank address, and upload a payment receipt (screenshot/image) during checkout for manual verification.
+Version:     2.3.0
 Author:      Hossain Md. Awlad
 Author URI:  https://www.technoviable.com
 Requires at least: 6.0
