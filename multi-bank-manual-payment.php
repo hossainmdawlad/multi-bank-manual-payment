@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Multi Bank Manual Payment
-Plugin URI:  https://www.technoviable.com
+Plugin URI:  https://wordpress.org/plugins/multi-bank-manual-payment/
 Description: WooCommerce payment gateway allowing customers to choose from multiple bank accounts, view full account details including SWIFT code and bank address, and upload a payment receipt (screenshot/image) during checkout for manual verification.
 Version:     3.0.0
 Author:      Hossain Md. Awlad
